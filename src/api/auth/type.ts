@@ -1,4 +1,4 @@
-import { Session,User } from 'next-auth';
+import { Session } from 'next-auth';
 import {AdapterUser} from "next-auth/adapters";
 
 export type SessionApp = Session & { refreshToken: string,userProfile:User,accessToken:string };
