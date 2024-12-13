@@ -2,6 +2,7 @@ import axios from 'axios';
 import { ConfigResponse } from '@/utils/axios/type';
 import {getSession} from "next-auth/react";
 import {getAccessToken} from "@/utils/cookie/tokens";
+import {SessionApp} from "@/api/auth/type";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -12,12 +13,12 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(async (config) => {
-  const session = await getSession();
+  const session = await getSession() as SessionApp | null;
   if (session) {
     config.headers.set(
       {
         ...config.headers,
-        Cookie: `accessToken=${session.access_token};`,
+        Cookie: `accessToken=${session.accessToken};`,
       },
       true,
     );
@@ -31,11 +32,11 @@ instance.interceptors.response.use(
     const config = response.config as ConfigResponse;
     if (config._retry) {
       const session = await getSession();
-      if (session)
-        await setSession(() => ({
-          ...session,
-          access_token: getAccessToken(config.headers.Cookie) ?? '',
-        }));
+      // if (session)
+      //   await setSession(() => ({
+      //     ...session,
+      //     access_token: getAccessToken(config.headers.Cookie) ?? '',
+      //   }));
     }
 
     return response;
@@ -44,7 +45,7 @@ instance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response && error.response.status === 403) {
-      const session = await getSession();
+      const session = await getSession() as SessionApp | null;
 
       if (!originalRequest._retry && session) {
         originalRequest.headers.set(

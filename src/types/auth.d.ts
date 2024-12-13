@@ -6,7 +6,20 @@ type LoginData = {
 type RegistrationData = {
     email:string,
     password:string,
-    username:string,
+    age:number,
+    numberPhone:string,
+    type:TypeLogin
     firstName:string,
     lastName:string
 }
+
+type LoginResponse = {
+    userProfile:User
+    accessToken:string,
+    refreshToken:string
+}
+
+enum TypeLogin{
+
+}
+

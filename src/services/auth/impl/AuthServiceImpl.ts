@@ -8,7 +8,7 @@ class AuthServiceImpl implements AuthService{
     }
 
 
-    login(data:LoginData):Promise<User>{
+    login(data:LoginData):Promise<LoginResponse>{
         throw new Error('eee')
     }
 }
